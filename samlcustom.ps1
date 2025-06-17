@@ -23,10 +23,10 @@ Write-Host "Found AppRegistration (AppId = $appId)"
 # 3) YOUR SETTINGS — update these three
 ############################################
 # URLs from the screenshot for madrid-10012
-$entityId    = "https://us-region2-tc-tpdbos1.devgateway.verizon.com/metadata" # Entity ID (Identifier)
-$identityUrl = "https://us-region2-tc-tpdbos1.devgateway.verizon.com/metadata"
-$replyUrl    = "https://us.region-2c-tpdbos1.devgateway.verizon.com/secure_access/services/saml/login-consumer"
-#$signOnUrl   = "https://sso.region-2c-tpdbos1.devgateway.verizon.com/secure_access/services/saml/login-consumer"
+$entityId    = "https://metadata" # Entity ID (Identifier)
+$identityUrl = "https://etadata"
+$replyUrl    = "https://onsumer"
+#$signOnUrl   = "https:/sumer"
 
 ############################################
 # 4) Set the Entity ID (Identifier) on the AppRegistration
