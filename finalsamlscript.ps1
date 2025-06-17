@@ -58,10 +58,10 @@ $spObjectId = $spObj.Id
 ############################################
 # 4) Your URLs — change if needed
 ############################################
-$entityId    = "https://us-region2-tc-tpdbos1.devgateway.verizon.com"  # ✅ verified domain
-$identityUrl = "https://us-region2-tc-tpdbos1.devgateway.verizon.com/metadata"
-$replyUrl    = "https://us.region-2c-tpdbos1.devgateway.verizon.com/secure_access/services/saml/login-consumer"
-$signOnUrl   = "https://us.region-2c-tpdbos1.devgateway.verizon.com/secure_access/services/saml/login-consumer"
+$entityId    = "https"  # ✅ verified domain
+$identityUrl = "httpsm/metadata"
+$replyUrl    = "httpsumer"
+$signOnUrl   = "httpumer"
 
 ############################################
 # 5) Set the Entity ID (identifierUris)
