@@ -40,9 +40,9 @@ if (-not $spObj) {
 $spObjectId = $spObj.Id
 
 # URLs
-$identityUrl = "https://us-region2-tc-tpdbos1.devgateway.verizon.com/metadata"
-$replyUrl    = "https://us.region-2c-tpdbos1.devgateway.verizon.com/secure_access/services/saml/login-consumer"
-$signOnUrl   = "https://us.region-2c-tpdbos1.devgateway.verizon.com/secure_access/services/saml/login-consumer"
+$identityUrl = "https:adata"
+$replyUrl    = "https:consumer"
+$signOnUrl   = "https:nsumer"
 
 # Get Verified Domains
 $verifiedDomains = (Get-MgDomain | Where-Object { $_.IsVerified }).Id
