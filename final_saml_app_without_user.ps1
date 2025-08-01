@@ -3,7 +3,7 @@ Connect-MgGraph -Scopes "Application.ReadWrite.All","Directory.ReadWrite.All","P
 $displayName = "madrid-1"
 
 $template = Get-MgApplicationTemplate -All | Where-Object { $_.DisplayName -like "*SAML*" } | Select-Object -First 1
-if (-not $template) { throw "❌ No SAML template found." }
+if (-not $template) { throw " No SAML template found." }
 
 $body = @{ displayName = $displayName } | ConvertTo-Json
 $result = Invoke-MgGraphRequest -Method POST -Uri "/beta/applicationTemplates/$($template.Id)/instantiate" -Body $body
@@ -30,7 +30,7 @@ $spObjectId = $spObj.Id
 Update-MgServicePrincipal -ServicePrincipalId $spObjectId -BodyParameter @{
     preferredSingleSignOnMode = "saml"
 }
-Write-Host "✅ Set preferredSingleSignOnMode to SAML"
+Write-Host " Set preferredSingleSignOnMode to SAML"
 
 # URLs (No Domain Verification required after above step)
 $entityId    = "https://us-region2-tc-tpdbos1.devgateway.verizon.com/metadata"
@@ -43,14 +43,14 @@ Update-MgApplication -ApplicationId $appObjectId -BodyParameter @{
     web = @{ redirectUris = @($replyUrl) }
     samlMetadataUrl = $entityId
 }
-Write-Host "✅ Custom URLs configured without domain verification."
+Write-Host " Custom URLs configured without domain verification."
 
 # Configure SP for direct SAML SSO
 Update-MgServicePrincipal -ServicePrincipalId $spObjectId -BodyParameter @{
     loginUrl = $signOnUrl
     samlSingleSignOnSettings = @{ relayState = $replyUrl }
 }
-Write-Host "✅ Configured SP for SAML SSO"
+Write-Host " Configured SP for SAML SSO"
 
 # Add Signing Certificate
 $certResp = Invoke-MgGraphRequest -Method POST `
@@ -60,10 +60,10 @@ $certResp = Invoke-MgGraphRequest -Method POST `
         endDateTime = (Get-Date).AddYears(2).ToString("o")
     } | ConvertTo-Json)
 
-Write-Host "✅ Certificate thumbprint: $($certResp.thumbprint)"
+Write-Host " Certificate thumbprint: $($certResp.thumbprint)"
 
 # Output Federation Metadata URL
 $federationMetadataUrl = "https://login.microsoftonline.com/$($appObj.AppId)/federationmetadata/2007-06/federationmetadata.xml?appid=$($appObj.AppId)"
 
-Write-Host "`n✅ SAML App '$displayName' created successfully!"
+Write-Host "`n SAML App '$displayName' created successfully!"
 Write-Host "Federation Metadata URL: $federationMetadataUrl"
