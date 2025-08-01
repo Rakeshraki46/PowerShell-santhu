@@ -31,7 +31,7 @@ try {
     $displayName = "VerizonPOC"
     
     $template = Get-MgApplicationTemplate -All | Where-Object { $_.DisplayName -like "*SAML*" } | Select-Object -First 1
-    if (-not $template) { throw "❌ No SAML template found." }
+    if (-not $template) { throw " No SAML template found." }
 
     $body = @{ displayName = $displayName } | ConvertTo-Json
     $result = Invoke-MgGraphRequest -Method POST -Uri "/beta/applicationTemplates/$($template.Id)/instantiate" -Body $body
@@ -58,7 +58,7 @@ try {
     Update-MgServicePrincipal -ServicePrincipalId $spObjectId -BodyParameter @{
         preferredSingleSignOnMode = "saml"
     }
-    Write-Host "✅ Set preferredSingleSignOnMode to SAML"
+    Write-Host " Set preferredSingleSignOnMode to SAML"
 
     # URLs (No Domain Verification required after above step)
     $entityId    = "https://us-region2-tc-tpdbos1.devgateway.verizon.com/metadata"
@@ -71,14 +71,14 @@ try {
         web = @{ redirectUris = @($replyUrl) }
         samlMetadataUrl = $entityId
     }
-    Write-Host "✅ Custom URLs configured without domain verification."
+    Write-Host " Custom URLs configured without domain verification."
 
     # Configure SP for direct SAML SSO
     Update-MgServicePrincipal -ServicePrincipalId $spObjectId -BodyParameter @{
         loginUrl = $signOnUrl
         samlSingleSignOnSettings = @{ relayState = $replyUrl }
     }
-    Write-Host "✅ Configured SP for SAML SSO"
+    Write-Host " Configured SP for SAML SSO"
 
     # Add Signing Certificate
     $certResp = Invoke-MgGraphRequest -Method POST `
@@ -88,23 +88,23 @@ try {
             endDateTime = (Get-Date).AddYears(2).ToString("o")
         } | ConvertTo-Json)
 
-    Write-Host "✅ Certificate thumbprint: $($certResp.thumbprint)"
+    Write-Host " Certificate thumbprint: $($certResp.thumbprint)"
 
     # --- YOUR ORIGINAL SCRIPT ENDS HERE ---
 
     # --- NEW: User and Group Provisioning ---
 
     # 1. Create a new user
-    Write-Host "`n👥 Creating new user account: '$newUserPrincipalName'..."
+    Write-Host "`n Creating new user account: '$newUserPrincipalName'..."
     $passwordProfile = @{
         ForceChangePasswordNextSignIn = $true
         Password = $newPassword
     }
     $newUser = New-MgUser -DisplayName $newDisplayName -UserPrincipalName $newUserPrincipalName -MailNickname $newMailNickname -PasswordProfile $passwordProfile -AccountEnabled:$true
-    Write-Host "✅ New user '$($newUser.DisplayName)' created successfully."
+    Write-Host " New user '$($newUser.DisplayName)' created successfully."
     
     # 2. Get the AppRole from the Application object directly and wait for it
-    Write-Host "➡️ Retrieving App Role from the Application object..."
+    Write-Host " Retrieving App Role from the Application object..."
     $appRoleFound = $false
     for ($i = 0; $i -lt 12; $i++) {
         $appObj = Get-MgApplication -ApplicationId $appObjectId
@@ -117,18 +117,18 @@ try {
     }
 
     if ($appRoleFound) {
-        Write-Host "✅ App role found. Assigning user and groups..."
+        Write-Host " App role found. Assigning user and groups..."
         
         # Assign the new user
         New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $spObjectId `
             -PrincipalId $newUser.Id `
             -ResourceId $spObjectId `
             -AppRoleId $appRole.Id | Out-Null
-        Write-Host "✅ Assigned new user '$($newUser.DisplayName)' to the application."
+        Write-Host " Assigned new user '$($newUser.DisplayName)' to the application."
         
         # 3. Assign groups to the application
         if ($groupsToAssign) {
-            Write-Host "`n➡️ Assigning specified groups to the application..."
+            Write-Host "`n Assigning specified groups to the application..."
             foreach ($groupId in $groupsToAssign) {
                 $group = Get-MgGroup -GroupId $groupId -ErrorAction SilentlyContinue
                 if ($group) {
@@ -136,23 +136,23 @@ try {
                         -PrincipalId $group.Id `
                         -ResourceId $spObjectId `
                         -AppRoleId $appRole.Id | Out-Null
-                    Write-Host "✅ Assigned group '$($group.DisplayName)' to the application."
+                    Write-Host " Assigned group '$($group.DisplayName)' to the application."
                 } else {
-                    Write-Warning "⚠️ Could not find group with ID: $groupId. Skipping assignment."
+                    Write-Warning " Could not find group with ID: $groupId. Skipping assignment."
                 }
             }
         } else {
-            Write-Host "`n📝 No groups were specified for assignment."
+            Write-Host "`n No groups were specified for assignment."
         }
     } else {
-        Write-Warning "⚠️ Could not find any app roles on the Application object after several attempts. User was created but not assigned."
+        Write-Warning " Could not find any app roles on the Application object after several attempts. User was created but not assigned."
     }
 
     # Final Output with Federation Metadata URL
     $federationMetadataUrl = "https://login.microsoftonline.com/$($appObj.AppId)/federationmetadata/2007-06/federationmetadata.xml?appid=$($appObj.AppId)"
-    Write-Host "`n✅ SAML App '$displayName' created and configured successfully!"
+    Write-Host "`n SAML App '$displayName' created and configured successfully!"
     Write-Host "Federation Metadata URL: $federationMetadataUrl"
 
 } catch {
-    Write-Host "`n❌ An error occurred during the execution. Details: $_"
+    Write-Host "`n An error occurred during the execution. Details: $_"
 }
