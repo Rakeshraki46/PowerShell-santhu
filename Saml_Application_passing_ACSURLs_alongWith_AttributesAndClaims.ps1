@@ -1,13 +1,5 @@
-<#
-.SYNOPSIS
- SAML onboarding script with:
- - User creation
- - Group creation
- - User -> Group membership
- - Group -> Application assignment
- - Group claims emitted in SAML assertion
-#>
-
+# Connect to Graph
+Connect-MgGraph -Scopes "Application.ReadWrite.All","Directory.ReadWrite.All","Policy.ReadWrite.ApplicationConfiguration","User.ReadWrite.All","Group.ReadWrite.All" -ErrorAction Stop
 # === Parameters / Customize ===
 $newUserPrincipalName = "santoshyamsani13@verizon038.onmicrosoft.com"
 $newPassword = "P@ssword@1234"   # leave empty to be prompted securely
@@ -30,8 +22,7 @@ $acsUrls = @(
 $entityId  = "https://us-region2-tc-tpdbos1.devgateway.verizon.com/metadata"
 $signOnUrl = "https://us.region-2c-tpdbos1.devgateway.verizon.com/secure_access/services/saml/login-consumer"
 
-# Connect to Graph
-Connect-MgGraph -Scopes "Application.ReadWrite.All","Directory.ReadWrite.All","Policy.ReadWrite.ApplicationConfiguration","User.ReadWrite.All","Group.ReadWrite.All" -ErrorAction Stop
+
 
 # Helper: wait for resource
 function Wait-ForResource {
