@@ -1,11 +1,21 @@
-<#
+<# requirements
  SAML onboarding script with:
  -Tenant is required to run this script
+ -visual studio need to install 
+ - in vscode on left side you will see extensions option click on it and in search bar type powershell .
+ - you need to install powershell sdk module 7.0 version.
+ -once the powershell is installed please check the version i.e;  "$PSVersionTable"
+ -once done with installation process and all 
+ -create a folder in locat machine i.e; "powershell" folder
+ - in the powershell folder create a file i.e; "filename.ps1"
+ -you need to connect to microsoft graph in vscode powershell sdk module."connect-mggraph" it will connect to entraid.
+ ===========================================================================================================================
+ - these will guide you what does the script perform when you run this script
  - Group creation
  - Group -> Application assignment
  - Group claims emitted in SAML assertion (cloud-only group names)
 #>
-# Connect to Microsoft Graph
+# Connect to Microsoft Graph     // these are delegated permissions we need to have to connect to entraid and saml application
 Connect-MgGraph -Scopes "Application.ReadWrite.All","Directory.ReadWrite.All","Policy.ReadWrite.ApplicationConfiguration","Group.ReadWrite.All" -ErrorAction Stop
 
 # === Parameters / Customize ===
@@ -117,4 +127,5 @@ $newGroupMailNickname = "verizonpocgroup999"
     #Write-Error "An error occurred: $_"
    # throw
 #}
+
 
