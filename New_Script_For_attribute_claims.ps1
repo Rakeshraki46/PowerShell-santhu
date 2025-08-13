@@ -52,7 +52,7 @@ $newGroupMailNickname = "verizonpocgroup999"
     } -ErrorAction Stop
     Update-MgServicePrincipal -ServicePrincipalId $spObjectId -BodyParameter @{
         loginUrl = $signOnUrl
-        samlSingleSignOnSettings = @{ relayState = $acsUrls[0] }
+        #samlSingleSignOnSettings = @{ relayState = $acsUrls[0] }
     } -ErrorAction Stop
 
     # --- Update GROUP CLAIMS (cloud_displayname only) ---
@@ -117,3 +117,4 @@ $newGroupMailNickname = "verizonpocgroup999"
     #Write-Error "An error occurred: $_"
    # throw
 #}
+
