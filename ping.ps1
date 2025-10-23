@@ -15,8 +15,8 @@ function Read-NonEmpty([string]$prompt) {
 }
 
 $EnvId = Read-NonEmpty "Enter Environment ID (EnvId)"
-$RegionTld = Read-Host "Enter region TLD (default: eu)"
-if ([string]::IsNullOrWhiteSpace($RegionTld)) { $RegionTld = 'eu' }
+$RegionTld = Read-Host "Enter region TLD (default: ca)"
+if ([string]::IsNullOrWhiteSpace($RegionTld)) { $RegionTld = 'ca' }
 
 $ClientId = Read-NonEmpty "Enter Worker ClientId"
 
@@ -37,7 +37,7 @@ $ClientSecret = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
 $Scopes = 'p1:read:environments p1:read:applications p1:write:applications p1:read:groups p1:write:groups p1:read:roles p1:write:roles'
 
 # Target app settings (edit defaults if you want)
-$DisplayName  = 'api_worker1234'
+$DisplayName  = 'RakeshS'
 $SpEntityId   = 'https://us-region2-tc-tpdbos1.devgateway.verizon.com/metadata'
 $AcsUrls      = @(
   'https://us.region-2c-tpdbos1.devgateway.verizon.com/secure_access/services/saml/login-consumer',
